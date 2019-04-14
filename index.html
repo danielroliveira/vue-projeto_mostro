@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>O matador de Mostro</title>
+
+    <!-- VueJS -->
+    <script src="https://unpkg.com/vue"></script>
+
+    <!-- styles -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    <div id="app" class="container">
+        <!-- TITULO -->
+        <p class="h1 text-center my-4">O matador de Mostro</p>
+
+        <!-- PONTUACAO -->
+        <div class="border border-secondary rounded shadow p-3">
+
+            <div class="row">
+                
+                <div class="col-6">
+                    <p class="h4 text-center">JOGADOR</p>
+                    <div class="barra">
+                        <div class="progresso" :style="ControlaProgressoJogador"></div>
+                    </div>
+                    <p class="h5 text-center mt-2">VIDA: {{ pontuacaoJogador }}%</p>
+                </div>
+                
+                <div class="col-6">
+                    <p class="h4 text-center">MONSTRO</p>
+                    <div class="barra">
+                        <div class="progresso" :style="ControlaProgressoMonstro"></div>
+                    </div>
+                    <p class="h5 text-center mt-2">VIDA: {{ pontuacaoMonstro }}%</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACTION | BUTTONS -->
+        <div class="border border-secondary rounded shadow p-3 mt-3 mx-auto">
+            <div v-if="!jogadorVenceu && !monstroVenceu" style="text-align: center">
+                <button class="btn btn-danger mr-2" @click="ataque">ATAQUE</button>
+                <button class="btn btn-warning mr-2" @click="ataqueEspecial">ATAQUE ESPECIAL</button>
+                <button :disabled="pontuacaoJogador == 100" class="btn btn btn-success mr-2" @click="curar">CURA</button>
+                <button class="btn btn-secondary" @click="desistir">DESISTIR</button>
+            </div>
+            <div class="h3" v-else-if="jogadorVenceu" style="text-align: center">
+                Você Venceu! ;)
+            </div>
+            <div class="h3" v-else-if="monstroVenceu" style="text-align: center">
+                O Monstro Venceu! :(
+            </div>
+        </div>
+
+        <!-- INICIAR NOVO JOGO -->
+        <div v-if="jogadorVenceu || monstroVenceu" class="border border-secondary rounded shadow p-3 mt-3 mx-auto">
+            <div style="text-align: center">
+                <button class="btn btn-primary mr-2" @click="desistir">INICIAR NOVO JOGO</button>
+            </div>
+        </div>
+
+        <!-- LIST OF ACTION -->
+        <div v-if="listaAcoes.length > 0" class="border border-secondary rounded shadow p-3 mt-3 mx-auto">
+            <ul>
+                <li v-for="acao in listaAcoes">
+                    <div v-for="(valor, chave, index) in acao">
+                        <div class="acao_jogador text-center mb-2 rounded"
+                            v-if="chave == 'jogador' && valor >= 0">JOGADOR ATINGIU MONSTRO COM {{ valor }}
+                        </div>
+                        <div class="acao_jogador text-center mb-2 rounded"
+                            v-else-if="chave == 'jogador' && valor < 0">JOGADOR RECEBEU FORÇA DE {{ valor * (-1) }}
+                        </div>
+                        <div class="acao_monstro text-center mb-2 rounded" 
+                            v-else>MONSTRO ATINGIU JOGADOR COM {{ valor }}
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+    <!-- scripts -->
+    <script src="app.js"></script>
+
+</body>
+</html>
